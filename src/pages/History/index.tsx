@@ -1,6 +1,12 @@
+import { useContext } from "react"
+import { CyclesContext } from "../../contexts/CyclesContext"
+import ptBR from "date-fns/locale/pt-BR"
 import * as C from "./styles"
+import { formatDistanceToNow } from "date-fns"
 
 export function History() {
+  const { cycles } = useContext(CyclesContext)
+
   return (
     <C.HistoryContainer>
       <h1>Meu histórico</h1>
@@ -16,38 +22,22 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>tarefa1</td>
-              <td>20 min</td>
-              <td>Há 2 meses</td>
-              <td>
-                <C.Status statusColor="green">Concluído</C.Status>
-              </td>
-            </tr>
-            <tr>
-              <td>tarefa1</td>
-              <td>20 min</td>
-              <td>Há 2 meses</td>
-              <td>
-                <C.Status statusColor="green">Concluído</C.Status>
-              </td>
-            </tr>
-            <tr>
-              <td>tarefa1</td>
-              <td>20 min</td>
-              <td>Há 2 meses</td>
-              <td>
-                <C.Status statusColor="green">Concluído</C.Status>
-              </td>
-            </tr>
-            <tr>
-              <td>tarefa1</td>
-              <td>20 min</td>
-              <td>Há 2 meses</td>
-              <td>
-                <C.Status statusColor="green">Concluído</C.Status>
-              </td>
-            </tr>
+            {cycles.map(cycle => {
+              return (
+                <tr key={cycle.id}>
+                  <td>{cycle.task}</td>
+                  <td>{cycle.minutesAmount} minutos</td>
+                  <td>{formatDistanceToNow(cycle.startDate, { addSuffix: true, locale: ptBR })}</td>
+                  <td>
+                    {cycle.finishedDate && <C.Status statusColor="green">Concluído</C.Status>}
+                    {cycle.interruptedDate && <C.Status statusColor="red">Interrompido</C.Status>}
+                    {!cycle.finishedDate && !cycle.interruptedDate && (
+                      <C.Status statusColor="yellow">Em Andamento</C.Status>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </C.HistoryList>
