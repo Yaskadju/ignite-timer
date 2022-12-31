@@ -7,9 +7,9 @@ export function Countdown() {
   const {
     activeCycle,
     activeCycleId,
+    amountSecondsPassed,
     markCurrentCycleAsFinished,
-    setSecondsPassed,
-    amountSecondsPassed
+    setSecondsPassed
   } = useContext(CyclesContext)
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
@@ -18,7 +18,7 @@ export function Countdown() {
     let interval: number
     if (activeCycle) {
       interval = setInterval(() => {
-        const secondsDifference = differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(new Date(), new Date(activeCycle.startDate))
 
         if (secondsDifference >= totalSeconds) {
           markCurrentCycleAsFinished()
